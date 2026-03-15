@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Aniversário, Franciny! 🎉</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #f8c7d6 0%, #ffd4e5 50%, #f8c7d6 100%);
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hearts {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #ff69b4;
+      transform: rotate(45deg);
+      animation: float 8s linear infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #ff69b4;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% { 
+        transform: translateY(100vh) rotate(45deg); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translateY(-10vh) rotate(45deg); 
+        opacity: 0; 
+      }
+    }
+
+    #start {
+      z-index: 1;
+      text-align: center;
+      cursor: pointer;
+      animation: pulse 1.5s infinite;
+    }
+
+    #start h1 {
+      color: white;
+      font-size: 3rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-weight: bold;
+    }
+
+    #start p {
+      color: white;
+      font-size: 1.2rem;
+      margin-top: 10px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    @keyframes pulse {
+      0%, 100% { 
+        transform: scale(1); 
+      }
+      50% { 
+        transform: scale(1.1); 
+      }
+    }
+
+    #content {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+      z-index: 1;
+      max-width: 800px;
+      max-height: 90vh;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      overflow-y: auto;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .album-section {
+      width: 100%;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .album-carousel {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #albumImage {
+      max-width: 100%;
+      max-height: 350px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    #albumImage:hover {
+      transform: scale(1.02);
+    }
+
+    .album-controls {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .album-btn {
+      background: linear-gradient(135deg, #ff69b4, #d4247d);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    }
+
+    .album-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+    }
+
+    .album-btn:active {
+      transform: translateY(0);
+    }
+
+    .album-counter {
+      color: #d4247d;
+      font-weight: bold;
+      font-size: 1rem;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    #content img.main-photo {
+      max-width: 100%;
+      height: auto;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      object-fit: cover;
+    }
+
+    #content h2 {
+      color: #d4247d;
+      font-size: 2rem;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    #content h3 {
+      color: #ff69b4;
+      font-size: 1.3rem;
+      margin: 10px 0 20px 0;
+      font-style: italic;
+    }
+
+    #content p {
+      color: #333;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      text-align: justify;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    .emoji {
+      font-size: 1.2rem;
+      margin: 0 3px;
+    }
+
+    .scroll-indicator {
+      text-align: center;
+      color: #d4247d;
+      font-size: 0.9rem;
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    .album-title {
+      color: #d4247d;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* Scrollbar customizado */
+    #content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #content::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    #content::-webkit-scrollbar-thumb {
+      background: #d4247d;
+      border-radius: 10px;
+    }
+
+    #content::-webkit-scrollbar-thumb:hover {
+      background: #ff69b4;
+    }
+
+    @media (max-width: 768px) {
+      #start h1 {
+        font-size: 2rem;
+      }
+
+      #start p {
+        font-size: 1rem;
+      }
+
+      #content {
+        max-width: 95%;
+        padding: 20px;
+      }
+
+      #content h2 {
+        font-size: 1.5rem;
+      }
+
+      #content p {
+        font-size: 0.95rem;
+      }
+
+      #albumImage {
+        max-height: 250px;
+      }
+
+      .album-controls {
+        gap: 10px;
+      }
+
+      .album-btn {
+        padding: 8px 15px;
+        font-size: 0.85rem;
+      }
+
+      .album-counter {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts"></div>
+  
+  <div id="start">
+    <h1>🎉 Feliz Aniversário! 🎉</h1>
+    <p>Clique aqui para uma mensagem especial 💕</p>
+  </div>
+
+  <div id="content">
+    <!-- Seção do Álbum -->
+    <div class="album-section">
+      <div class="album-title">Álbum de Fotos 📸</div>
+      <div class="album-carousel">
+        <img id="albumImage" src="" alt="Foto do álbum" onclick="nextPhoto()" />
+        <div class="album-controls">
+          <button class="album-btn" onclick="prevPhoto()">← Anterior</button>
+          <div class="album-counter"><span id="currentPhoto">1</span> / <span id="totalPhotos">3</span></div>
+          <button class="album-btn" onclick="nextPhoto()">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divisor -->
+    <hr style="width: 80%; border: none; border-top: 2px solid #ffc0cb; margin: 20px 0;">
+
+    <!-- Seção da Mensagem -->
+    <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663192112258/GREgcPlEqPXiyBBR.jpg" alt="Franciny" class="main-photo" />
+    
+    <h2>Para Franciny 💗</h2>
+    <h3>Minha melhor amiga, moranguinho, bê</h3>
+    
+    <p>
+      Oiii, meu bem? Como você tá? Espero que bem, não sabia muito bem o que falar, então fui seguindo meu coração, espero que goste muito. Acho que foi no dia da eletiva, na segunda ou terceira semana de 2024, no Clube de Libras kkkk. Você estava "brava" com a Flowers e me fez sentar entre vocês no intervalo, acho que foi aí que tudo começou.
+    </p>
+
+    <p>
+      Com você nada é calculado, é tudo tão genuíno que simplesmente acontece. Você é muito importante e especial pra mim. Eu não falo sempre que te amo, mas tento mostrar isso em pequenos gestos: te ouvir, lembrar do que você me conta, comprar coisas que me lembre você, te ver em coisas específicas.
+    </p>
+
+    <p>
+      Eu te amo muito e só tenho a agradecer e principalmente por você existir e por ter se aproximado de mim naquele dia. Mesmo quando tudo fica difícil, você nunca desistiu de mim e eu prometo nunca desistir de você e nem de nós duas. Você é a pessoa mais brilhante e gentil que eu conheço, e ter você na minha vida é a coisa mais linda que já me aconteceu.
+    </p>
+
+    <p>
+      Feliz aniversário, bê, moranguinho, minha melhor amiga. Continue sendo essa pessoa incrível que você é. E que seu dia seja muito bom e saiba que pode sempre contar comigo. Eu te amo muito <span class="emoji">🤍🫶🏻✨</span>
+    </p>
+
+    <div class="scroll-indicator">
+      ↑ Deslize para ver toda a mensagem ↑
+    </div>
+  </div>
+
+  <script>
+    const start = document.getElementById("start");
+    const content = document.getElementById("content");
+    const albumImage = document.getElementById("albumImage");
+    const currentPhotoSpan = document.getElementById("currentPhoto");
+    const totalPhotosSpan = document.getElementById("totalPhotos");
+
+    // Array com as fotos do álbum
+    const photos = [
+      "https://files.manuscdn.com/user_upload_by_module/session_file/310519663192112258/GREgcPlEqPXiyBBR.jpg",
+      "foto1.jpg",
+      "foto2.jpg"
+    ];
+
+    let currentPhotoIndex = 0;
+
+    // Inicializar o total de fotos
+    totalPhotosSpan.textContent = photos.length;
+
+    start.addEventListener("click", () => {
+      start.style.display = "none";
+      content.style.display = "flex";
+      if (currentPhotoIndex === 0) {
+        updateAlbumPhoto();
+      }
+    });
+
+    function updateAlbumPhoto() {
+      albumImage.src = photos[currentPhotoIndex];
+      currentPhotoSpan.textContent = currentPhotoIndex + 1;
+    }
+
+    function nextPhoto() {
+      currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+      updateAlbumPhoto();
+    }
+
+    function prevPhoto() {
+      currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+      updateAlbumPhoto();
+    }
+
+    // Navegação com teclado
+    document.addEventListener("keydown", (e) => {
+      if (content.style.display === "flex") {
+        if (e.key === "ArrowRight") nextPhoto();
+        if (e.key === "ArrowLeft") prevPhoto();
+      }
+    });
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+      document.querySelector(".hearts").appendChild(heart);
+      setTimeout(() => heart.remove(), 10000);
+    }
+
+    setInterval(createHeart, 500);
+
+    // Remover indicador de scroll quando o usuário começar a rolar
+    content.addEventListener("scroll", () => {
+      const indicator = document.querySelector(".scroll-indicator");
+      if (indicator) {
+        indicator.style.opacity = "0.5";
+      }
+    });
+  </script>
+</body>
+</html>
