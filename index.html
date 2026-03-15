@@ -204,12 +204,12 @@
     }
 
     #albumImage {
-      max-width: 100%;
-      max-height: 350px;
-      height: auto;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1;
       border-radius: 20px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-      object-fit: contain;
+      object-fit: cover;
       cursor: pointer;
       transition: transform 0.3s ease;
     }
@@ -345,7 +345,7 @@
       }
 
       #albumImage {
-        max-height: 250px;
+        max-width: 300px;
       }
 
       .album-cover {
