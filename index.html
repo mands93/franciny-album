@@ -146,6 +146,63 @@
       gap: 15px;
     }
 
+    .album-cover {
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #ff69b4, #d4247d);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .album-cover:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .album-cover-text {
+      font-size: 3rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      z-index: 2;
+      position: relative;
+    }
+
+    .album-cover-hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      z-index: 1;
+    }
+
+    .heart-decoration {
+      position: absolute;
+      animation: float-hearts 3s ease-in-out infinite;
+    }
+
+    @keyframes float-hearts {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-10px) scale(1.1);
+      }
+    }
+
     #albumImage {
       max-width: 100%;
       max-height: 350px;
@@ -197,15 +254,6 @@
       font-size: 1rem;
       min-width: 70px;
       text-align: center;
-    }
-
-    #content img.main-photo {
-      max-width: 100%;
-      height: auto;
-      border-radius: 20px;
-      margin-bottom: 25px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-      object-fit: cover;
     }
 
     #content h2 {
@@ -270,6 +318,10 @@
       background: #ff69b4;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 768px) {
       #start h1 {
         font-size: 2rem;
@@ -294,6 +346,14 @@
 
       #albumImage {
         max-height: 250px;
+      }
+
+      .album-cover {
+        max-width: 300px;
+      }
+
+      .album-cover-text {
+        font-size: 2.5rem;
       }
 
       .album-controls {
@@ -324,12 +384,22 @@
     <div class="album-section">
       <div class="album-title">Álbum de Fotos 📸</div>
       <div class="album-carousel">
-        <img id="albumImage" src="" alt="Foto do álbum" onclick="nextPhoto()" />
-        <div class="album-controls">
+        <!-- Capa do Álbum -->
+        <div class="album-cover" id="albumCover" onclick="openAlbum()">
+          <div class="album-cover-hearts" id="coverHearts"></div>
+          <div class="album-cover-text">Franciny</div>
+        </div>
+
+        <!-- Fotos (inicialmente ocultas) -->
+        <img id="albumImage" src="" alt="Foto do álbum" onclick="nextPhoto()" class="hidden" />
+        
+        <div class="album-controls hidden" id="albumControls">
           <button class="album-btn" onclick="prevPhoto()">← Anterior</button>
           <div class="album-counter"><span id="currentPhoto">1</span> / <span id="totalPhotos">3</span></div>
           <button class="album-btn" onclick="nextPhoto()">Próxima →</button>
         </div>
+
+        <button class="album-btn hidden" id="backToCover" onclick="backToCover()" style="margin-top: 15px;">← Voltar à Capa</button>
       </div>
     </div>
 
@@ -337,8 +407,6 @@
     <hr style="width: 80%; border: none; border-top: 2px solid #ffc0cb; margin: 20px 0;">
 
     <!-- Seção da Mensagem -->
-    <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663192112258/GREgcPlEqPXiyBBR.jpg" alt="Franciny" class="main-photo" />
-    
     <h2>Para Franciny 💗</h2>
     <h3>Minha melhor amiga, moranguinho, bê</h3>
     
@@ -367,8 +435,12 @@
     const start = document.getElementById("start");
     const content = document.getElementById("content");
     const albumImage = document.getElementById("albumImage");
+    const albumCover = document.getElementById("albumCover");
+    const albumControls = document.getElementById("albumControls");
+    const backToCoverBtn = document.getElementById("backToCover");
     const currentPhotoSpan = document.getElementById("currentPhoto");
     const totalPhotosSpan = document.getElementById("totalPhotos");
+    const coverHearts = document.getElementById("coverHearts");
 
     // Array com as fotos do álbum
     const photos = [
@@ -378,17 +450,61 @@
     ];
 
     let currentPhotoIndex = 0;
+    let albumOpen = false;
 
     // Inicializar o total de fotos
     totalPhotosSpan.textContent = photos.length;
 
+    // Criar corações decorativos na capa
+    function createCoverHearts() {
+      coverHearts.innerHTML = '';
+      const positions = [
+        { top: '10%', left: '10%', delay: '0s' },
+        { top: '10%', right: '10%', delay: '0.5s' },
+        { bottom: '10%', left: '10%', delay: '1s' },
+        { bottom: '10%', right: '10%', delay: '1.5s' },
+        { top: '50%', left: '5%', delay: '0.25s' },
+        { top: '50%', right: '5%', delay: '0.75s' }
+      ];
+
+      positions.forEach(pos => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart-decoration');
+        heart.innerHTML = '💕';
+        heart.style.fontSize = '1.5rem';
+        heart.style.animationDelay = pos.delay;
+        if (pos.top) heart.style.top = pos.top;
+        if (pos.bottom) heart.style.bottom = pos.bottom;
+        if (pos.left) heart.style.left = pos.left;
+        if (pos.right) heart.style.right = pos.right;
+        coverHearts.appendChild(heart);
+      });
+    }
+
+    createCoverHearts();
+
     start.addEventListener("click", () => {
       start.style.display = "none";
       content.style.display = "flex";
-      if (currentPhotoIndex === 0) {
-        updateAlbumPhoto();
-      }
     });
+
+    function openAlbum() {
+      albumOpen = true;
+      albumCover.classList.add("hidden");
+      albumImage.classList.remove("hidden");
+      albumControls.classList.remove("hidden");
+      backToCoverBtn.classList.remove("hidden");
+      currentPhotoIndex = 0;
+      updateAlbumPhoto();
+    }
+
+    function backToCover() {
+      albumOpen = false;
+      albumCover.classList.remove("hidden");
+      albumImage.classList.add("hidden");
+      albumControls.classList.add("hidden");
+      backToCoverBtn.classList.add("hidden");
+    }
 
     function updateAlbumPhoto() {
       albumImage.src = photos[currentPhotoIndex];
@@ -407,7 +523,7 @@
 
     // Navegação com teclado
     document.addEventListener("keydown", (e) => {
-      if (content.style.display === "flex") {
+      if (albumOpen && content.style.display === "flex") {
         if (e.key === "ArrowRight") nextPhoto();
         if (e.key === "ArrowLeft") prevPhoto();
       }
